@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+  <defs>
+    <style>
+      text { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+      .title { font-size: 18px; font-weight: 700; fill: #e0e0e0; }
+      .vlan-title { font-size: 13px; font-weight: 700; }
+      .subnet { font-size: 10px; font-weight: 400; opacity: 0.8; }
+      .device { font-size: 9px; fill: #d0d0d0; }
+      .device-ip { font-size: 8px; fill: #999999; }
+      .trunk-label { font-size: 8px; fill: #e879f9; font-weight: 600; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Striped pattern for trunks -->
+    <pattern id="trunkPattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#e879f9" stroke-width="2" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="600" fill="#1a1a2e"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.03">
+    <line x1="0" y1="50" x2="1000" y2="50" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="100" x2="1000" y2="100" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="150" x2="1000" y2="150" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1000" y2="200" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="250" x2="1000" y2="250" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1000" y2="300" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="350" x2="1000" y2="350" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="1000" y2="400" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="450" x2="1000" y2="450" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="1000" y2="500" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="550" x2="1000" y2="550" stroke="#fff" stroke-width="0.5"/>
+    <line x1="100" y1="0" x2="100" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="500" y1="0" x2="500" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="700" y1="0" x2="700" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="800" y1="0" x2="800" y2="600" stroke="#fff" stroke-width="0.5"/>
+    <line x1="900" y1="0" x2="900" y2="600" stroke="#fff" stroke-width="0.5"/>
+  </g>
+
+  <!-- Title -->
+  <text x="500" y="32" text-anchor="middle" class="title">IceWiFi VLAN Map</text>
+  <line x1="350" y1="40" x2="650" y2="40" stroke="#0052FF" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- ============================================ -->
+  <!-- VLAN ZONES - Four colored swim lanes         -->
+  <!-- ============================================ -->
+
+  <!-- VLAN 666 - Internet/Fritz!Box - Green -->
+  <g transform="translate(20, 60)">
+    <rect width="225" height="480" rx="10" fill="#4ade80" opacity="0.04" stroke="#4ade80" stroke-width="1.5" stroke-opacity="0.3"/>
+    <!-- Header bar -->
+    <rect width="225" height="40" rx="10" fill="#4ade80" opacity="0.12"/>
+    <rect x="0" y="20" width="225" height="20" fill="#4ade80" opacity="0.12"/>
+    <text x="112" y="20" text-anchor="middle" class="vlan-title" fill="#4ade80">VLAN 666</text>
+    <text x="112" y="34" text-anchor="middle" class="subnet" fill="#4ade80">192.168.178.0/24</text>
+    <text x="112" y="55" text-anchor="middle" font-size="8" fill="#4ade80" opacity="0.6">Internet / Fritz!Box Zone</text>
+
+    <!-- Devices -->
+    <g transform="translate(20, 75)">
+      <rect width="185" height="50" rx="5" fill="#1e3a1e" stroke="#4ade80" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="18" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">Fritz!Box</text>
+      <text x="92" y="30" text-anchor="middle" class="device-ip">192.168.178.1</text>
+      <text x="92" y="42" text-anchor="middle" font-size="7" fill="#4ade80" opacity="0.7">Internet Gateway / Router</text>
+    </g>
+
+    <g transform="translate(20, 145)">
+      <rect width="185" height="42" rx="5" fill="#1a2744" stroke="#4ade80" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">USG 3P (WAN)</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">192.168.178.250</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">WAN interface</text>
+    </g>
+
+    <g transform="translate(20, 207)">
+      <rect width="185" height="42" rx="5" fill="#3a1616" stroke="#4ade80" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">Sophos (eth1)</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">192.168.178.154</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">WAN interface</text>
+    </g>
+
+    <g transform="translate(20, 269)">
+      <rect width="185" height="42" rx="5" fill="#2d1b4e" stroke="#4ade80" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">NUC-HA (WiFi)</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">192.168.178.108</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">Wireless backup link</text>
+    </g>
+  </g>
+
+  <!-- VLAN 11 - Sophos - Orange -->
+  <g transform="translate(265, 60)">
+    <rect width="225" height="480" rx="10" fill="#f97316" opacity="0.04" stroke="#f97316" stroke-width="1.5" stroke-opacity="0.3"/>
+    <rect width="225" height="40" rx="10" fill="#f97316" opacity="0.12"/>
+    <rect x="0" y="20" width="225" height="20" fill="#f97316" opacity="0.12"/>
+    <text x="112" y="20" text-anchor="middle" class="vlan-title" fill="#f97316">VLAN 11</text>
+    <text x="112" y="34" text-anchor="middle" class="subnet" fill="#f97316">10.10.0.0/24</text>
+    <text x="112" y="55" text-anchor="middle" font-size="8" fill="#f97316" opacity="0.6">Sophos Management Zone</text>
+
+    <g transform="translate(20, 75)">
+      <rect width="185" height="50" rx="5" fill="#3a1616" stroke="#f97316" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="18" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">Sophos Firewall (eth0)</text>
+      <text x="92" y="30" text-anchor="middle" class="device-ip">10.10.0.2</text>
+      <text x="92" y="42" text-anchor="middle" font-size="7" fill="#f97316" opacity="0.7">Firewall / VPN Gateway</text>
+    </g>
+
+    <g transform="translate(20, 145)">
+      <rect width="185" height="42" rx="5" fill="#2d1b4e" stroke="#f97316" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">NUC-HA</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.0.100</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">Home Assistant (VLAN 11 iface)</text>
+    </g>
+  </g>
+
+  <!-- VLAN 12 - IoT/UniFi - Blue -->
+  <g transform="translate(510, 60)">
+    <rect width="225" height="480" rx="10" fill="#0052FF" opacity="0.04" stroke="#0052FF" stroke-width="1.5" stroke-opacity="0.3"/>
+    <rect width="225" height="40" rx="10" fill="#0052FF" opacity="0.12"/>
+    <rect x="0" y="20" width="225" height="20" fill="#0052FF" opacity="0.12"/>
+    <text x="112" y="20" text-anchor="middle" class="vlan-title" fill="#0052FF">VLAN 12</text>
+    <text x="112" y="34" text-anchor="middle" class="subnet" fill="#0052FF">10.10.10.0/24</text>
+    <text x="112" y="55" text-anchor="middle" font-size="8" fill="#0052FF" opacity="0.6">IoT / UniFi Zone</text>
+
+    <g transform="translate(20, 75)">
+      <rect width="185" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">USG 3P (LAN)</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.1</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">UniFi Gateway</text>
+    </g>
+
+    <g transform="translate(20, 137)">
+      <rect width="185" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">Sophos (eth2)</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.2</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">Sophos IoT interface</text>
+    </g>
+
+    <g transform="translate(20, 199)">
+      <rect width="185" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">CK+ Cloud Key</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.10</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">UniFi Controller</text>
+    </g>
+
+    <g transform="translate(20, 261)">
+      <rect width="185" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">U6+ AP Arbeitszimmer</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.11</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">WiFi Access Point</text>
+    </g>
+
+    <g transform="translate(20, 323)">
+      <rect width="185" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">U6+ AP Keller</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.12</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">WiFi Access Point</text>
+    </g>
+
+    <g transform="translate(20, 385)">
+      <rect width="185" height="42" rx="5" fill="#2d1b4e" stroke="#0052FF" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="16" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">NUC-HA</text>
+      <text x="92" y="28" text-anchor="middle" class="device-ip">10.10.10.100</text>
+      <text x="92" y="38" text-anchor="middle" font-size="7" fill="#999" opacity="0.7">Home Assistant (VLAN 12 iface)</text>
+    </g>
+  </g>
+
+  <!-- VLAN 13 - Tor - Purple -->
+  <g transform="translate(755, 60)">
+    <rect width="225" height="480" rx="10" fill="#c084fc" opacity="0.04" stroke="#c084fc" stroke-width="1.5" stroke-opacity="0.3"/>
+    <rect width="225" height="40" rx="10" fill="#c084fc" opacity="0.12"/>
+    <rect x="0" y="20" width="225" height="20" fill="#c084fc" opacity="0.12"/>
+    <text x="112" y="20" text-anchor="middle" class="vlan-title" fill="#c084fc">VLAN 13</text>
+    <text x="112" y="34" text-anchor="middle" class="subnet" fill="#c084fc">10.10.13.0/24</text>
+    <text x="112" y="55" text-anchor="middle" font-size="8" fill="#c084fc" opacity="0.6">Tor Isolated Zone</text>
+
+    <g transform="translate(20, 75)">
+      <rect width="185" height="50" rx="5" fill="#2d1b4e" stroke="#c084fc" stroke-width="1" filter="url(#shadow)"/>
+      <text x="92" y="18" text-anchor="middle" class="device" fill="#ffffff" font-weight="600">NUC-HA</text>
+      <text x="92" y="30" text-anchor="middle" class="device-ip">10.10.13.1</text>
+      <text x="92" y="42" text-anchor="middle" font-size="7" fill="#c084fc" opacity="0.7">Tor Gateway / Home Assistant</text>
+    </g>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- TRUNK CONNECTIONS between VLANs              -->
+  <!-- ============================================ -->
+
+  <!-- Trunk: AZ Switch carries VLAN 11, 12, 666 -->
+  <g transform="translate(0, 0)">
+    <!-- AZ Switch box at bottom-left area -->
+    <rect x="100" y="555" width="180" height="32" rx="5" fill="#1a2744" stroke="#e879f9" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="190" y="573" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="600">AZ Switch</text>
+    <text x="190" y="583" text-anchor="middle" font-size="7" fill="#e879f9">Trunks: VLAN 11, 12, 666</text>
+
+    <!-- Trunk lines from AZ Switch up to VLAN lanes -->
+    <line x1="150" y1="555" x2="132" y2="540" stroke="#4ade80" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,2"/>
+    <line x1="190" y1="555" x2="377" y2="540" stroke="#f97316" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,2"/>
+    <line x1="210" y1="555" x2="622" y2="540" stroke="#0052FF" stroke-width="1.5" opacity="0.5" stroke-dasharray="3,2"/>
+  </g>
+
+  <!-- CRS305 Backbone -->
+  <g>
+    <rect x="410" y="555" width="180" height="32" rx="5" fill="#2d1b4e" stroke="#e879f9" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="500" y="573" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="600">CRS305 Backbone</text>
+    <text x="500" y="583" text-anchor="middle" font-size="7" fill="#e879f9">SFP+ 10G Trunk</text>
+
+    <!-- Connect AZ Switch to CRS305 -->
+    <line x1="280" y1="571" x2="410" y2="571" stroke="#e879f9" stroke-width="2.5" opacity="0.6"/>
+    <polygon points="405,567 415,571 405,575" fill="#e879f9" opacity="0.6"/>
+    <polygon points="285,567 275,571 285,575" fill="#e879f9" opacity="0.6"/>
+    <text x="345" y="565" text-anchor="middle" class="trunk-label">SFP+ 10G</text>
+  </g>
+
+  <!-- Keller Switch -->
+  <g>
+    <rect x="720" y="555" width="180" height="32" rx="5" fill="#1a2744" stroke="#e879f9" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="810" y="573" text-anchor="middle" font-size="10" fill="#ffffff" font-weight="600">Keller Switch</text>
+    <text x="810" y="583" text-anchor="middle" font-size="7" fill="#e879f9">Trunks: VLAN 11, 12, 666</text>
+
+    <!-- Connect CRS305 to Keller Switch -->
+    <line x1="590" y1="571" x2="720" y2="571" stroke="#e879f9" stroke-width="2.5" opacity="0.6"/>
+    <polygon points="715,567 725,571 715,575" fill="#e879f9" opacity="0.6"/>
+    <polygon points="595,567 585,571 595,575" fill="#e879f9" opacity="0.6"/>
+    <text x="655" y="565" text-anchor="middle" class="trunk-label">SFP+ 10G</text>
+
+    <!-- Trunk lines from Keller Switch up to VLAN lanes -->
+    <line x1="850" y1="555" x2="132" y2="540" stroke="#4ade80" stroke-width="1" opacity="0.3" stroke-dasharray="3,2"/>
+    <line x1="830" y1="555" x2="377" y2="540" stroke="#f97316" stroke-width="1" opacity="0.3" stroke-dasharray="3,2"/>
+    <line x1="810" y1="555" x2="622" y2="540" stroke="#0052FF" stroke-width="1" opacity="0.3" stroke-dasharray="3,2"/>
+  </g>
+
+  <!-- Footer -->
+  <text x="500" y="596" text-anchor="middle" font-size="8" fill="#555577">IceWiFi Project - VLAN Map</text>
+</svg>

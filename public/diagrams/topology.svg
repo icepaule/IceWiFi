@@ -1,0 +1,293 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <style>
+      text { font-family: 'Segoe UI', Arial, Helvetica, sans-serif; }
+      .title { font-size: 18px; font-weight: 700; fill: #e0e0e0; }
+      .device-label { font-size: 11px; font-weight: 600; fill: #ffffff; }
+      .ip-label { font-size: 9px; fill: #b0b0b0; }
+      .zone-label { font-size: 10px; font-weight: 600; fill: #ffffff; opacity: 0.7; }
+      .legend-text { font-size: 9px; fill: #c0c0c0; }
+    </style>
+    <!-- Drop shadow filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <!-- Glow filter for accent elements -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Cloud shape -->
+    <clipPath id="cloudClip">
+      <path d="M60,45 Q60,20 85,20 Q95,5 115,15 Q130,5 145,15 Q170,10 170,35 Q185,35 185,50 Q185,65 170,65 L60,65 Q45,65 45,50 Q45,38 60,45 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#1a1a2e" rx="0"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.04">
+    <line x1="0" y1="0" x2="0" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="60" y1="0" x2="60" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="120" y1="0" x2="120" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="180" y1="0" x2="180" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="240" y1="0" x2="240" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="360" y1="0" x2="360" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="420" y1="0" x2="420" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="480" y1="0" x2="480" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="540" y1="0" x2="540" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="660" y1="0" x2="660" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="720" y1="0" x2="720" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="780" y1="0" x2="780" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="840" y1="0" x2="840" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="900" y1="0" x2="900" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="960" y1="0" x2="960" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="1020" y1="0" x2="1020" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="1080" y1="0" x2="1080" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="1140" y1="0" x2="1140" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="1200" y1="0" x2="1200" y2="800" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="60" x2="1200" y2="60" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="120" x2="1200" y2="120" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="180" x2="1200" y2="180" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="240" x2="1200" y2="240" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="360" x2="1200" y2="360" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="420" x2="1200" y2="420" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="480" x2="1200" y2="480" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="540" x2="1200" y2="540" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="660" x2="1200" y2="660" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="720" x2="1200" y2="720" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="0" y1="780" x2="1200" y2="780" stroke="#ffffff" stroke-width="0.5"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="32" text-anchor="middle" class="title">IceWiFi Network Topology</text>
+  <line x1="400" y1="40" x2="800" y2="40" stroke="#0052FF" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- ============================================ -->
+  <!-- CONNECTION LINES (drawn first, behind nodes) -->
+  <!-- ============================================ -->
+
+  <!-- Internet to Fritz!Box -->
+  <line x1="600" y1="95" x2="600" y2="140" stroke="#4ade80" stroke-width="2" stroke-dasharray="6,3" opacity="0.7"/>
+
+  <!-- Fritz!Box to USG 3P (VLAN 666) -->
+  <line x1="600" y1="185" x2="420" y2="260" stroke="#4ade80" stroke-width="2" opacity="0.6"/>
+  <text x="495" y="218" font-size="8" fill="#4ade80" opacity="0.8">VLAN 666</text>
+
+  <!-- Fritz!Box to Keller Switch -->
+  <line x1="640" y1="185" x2="780" y2="520" stroke="#4ade80" stroke-width="1.5" opacity="0.4" stroke-dasharray="4,2"/>
+
+  <!-- Fritz!Box to Sophos eth1 -->
+  <line x1="660" y1="175" x2="820" y2="260" stroke="#4ade80" stroke-width="2" opacity="0.6"/>
+  <text x="755" y="218" font-size="8" fill="#4ade80" opacity="0.8">VLAN 666</text>
+
+  <!-- USG to AZ Switch (VLAN 12) -->
+  <line x1="420" y1="305" x2="400" y2="520" stroke="#0052FF" stroke-width="2" opacity="0.6"/>
+  <text x="398" y="415" font-size="8" fill="#0052FF" opacity="0.8">VLAN 12</text>
+
+  <!-- Sophos to AZ Switch (VLAN 11) -->
+  <line x1="820" y1="305" x2="440" y2="540" stroke="#f97316" stroke-width="2" opacity="0.5" stroke-dasharray="5,3"/>
+  <text x="640" y="410" font-size="8" fill="#f97316" opacity="0.8">VLAN 11</text>
+
+  <!-- Sophos to Keller Switch -->
+  <line x1="860" y1="305" x2="800" y2="520" stroke="#f97316" stroke-width="1.5" opacity="0.4" stroke-dasharray="4,2"/>
+
+  <!-- AZ Switch to CK+ -->
+  <line x1="340" y1="540" x2="200" y2="620" stroke="#0052FF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- AZ Switch to U6+ AZ -->
+  <line x1="360" y1="570" x2="200" y2="720" stroke="#0052FF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- AZ Switch to NUC-HA -->
+  <line x1="460" y1="560" x2="580" y2="680" stroke="#0052FF" stroke-width="2" opacity="0.5"/>
+
+  <!-- CRS305 Backbone: AZ Switch to CRS305 -->
+  <line x1="440" y1="540" x2="600" y2="540" stroke="#e879f9" stroke-width="3" opacity="0.5"/>
+  <!-- CRS305 Backbone: CRS305 to Keller Switch -->
+  <line x1="660" y1="540" x2="760" y2="540" stroke="#e879f9" stroke-width="3" opacity="0.5"/>
+  <text x="630" y="525" text-anchor="middle" font-size="8" fill="#e879f9" opacity="0.9">SFP+ 10G</text>
+
+  <!-- Keller Switch to U6+ Keller -->
+  <line x1="820" y1="570" x2="950" y2="680" stroke="#0052FF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Keller Switch to ESXi7 -->
+  <line x1="840" y1="570" x2="950" y2="620" stroke="#0052FF" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- NUC-HA WiFi to Fritz!Box -->
+  <line x1="620" y1="680" x2="620" y2="185" stroke="#4ade80" stroke-width="1" opacity="0.25" stroke-dasharray="3,5"/>
+  <text x="635" y="440" font-size="7" fill="#4ade80" opacity="0.5" transform="rotate(90,635,440)">WiFi (VLAN 666)</text>
+
+  <!-- ============================================ -->
+  <!-- ZONE BACKGROUNDS                            -->
+  <!-- ============================================ -->
+
+  <!-- Arbeitszimmer zone -->
+  <rect x="120" y="500" width="430" height="260" rx="10" fill="#0052FF" opacity="0.05" stroke="#0052FF" stroke-width="1" stroke-dasharray="4,2" opacity="0.15"/>
+  <text x="140" y="520" class="zone-label" fill="#0052FF" opacity="0.5">Arbeitszimmer</text>
+
+  <!-- Keller zone -->
+  <rect x="690" y="500" width="340" height="260" rx="10" fill="#f97316" opacity="0.05" stroke="#f97316" stroke-width="1" stroke-dasharray="4,2" opacity="0.15"/>
+  <text x="710" y="520" class="zone-label" fill="#f97316" opacity="0.5">Keller</text>
+
+  <!-- ============================================ -->
+  <!-- DEVICES                                     -->
+  <!-- ============================================ -->
+
+  <!-- Internet Cloud -->
+  <g transform="translate(485, 50)" filter="url(#shadow)">
+    <path d="M60,40 Q60,15 85,15 Q95,0 115,10 Q130,0 148,10 Q172,5 172,30 Q188,30 188,48 Q188,65 172,65 L58,65 Q40,65 40,48 Q40,33 60,40 Z" fill="#2a2a4a" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="114" y="48" text-anchor="middle" class="device-label" font-size="12">Internet</text>
+  </g>
+
+  <!-- Fritz!Box -->
+  <g transform="translate(540, 140)" filter="url(#shadow)">
+    <rect width="120" height="45" rx="6" fill="#1e3a1e" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="60" y="18" text-anchor="middle" class="device-label">Fritz!Box</text>
+    <text x="60" y="30" text-anchor="middle" class="ip-label">192.168.178.1</text>
+    <text x="60" y="40" text-anchor="middle" font-size="7" fill="#4ade80" opacity="0.7">Internet Gateway</text>
+  </g>
+
+  <!-- USG 3P -->
+  <g transform="translate(350, 255)" filter="url(#shadow)">
+    <rect width="140" height="50" rx="6" fill="#16213e" stroke="#0052FF" stroke-width="1.5"/>
+    <text x="70" y="17" text-anchor="middle" class="device-label">USG 3P</text>
+    <text x="70" y="29" text-anchor="middle" class="ip-label">WAN: 192.168.178.250</text>
+    <text x="70" y="39" text-anchor="middle" class="ip-label">LAN: 10.10.10.1</text>
+    <text x="70" y="48" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">Security Gateway</text>
+  </g>
+
+  <!-- Sophos Firewall -->
+  <g transform="translate(740, 255)" filter="url(#shadow)">
+    <rect width="160" height="50" rx="6" fill="#3a1616" stroke="#f97316" stroke-width="1.5"/>
+    <text x="80" y="14" text-anchor="middle" class="device-label">Sophos Firewall</text>
+    <text x="80" y="25" text-anchor="middle" class="ip-label">eth0: 10.10.0.2 (VLAN 11)</text>
+    <text x="80" y="35" text-anchor="middle" class="ip-label">eth1: 192.168.178.154 (VLAN 666)</text>
+    <text x="80" y="45" text-anchor="middle" class="ip-label">eth2: 10.10.10.2 (VLAN 12)</text>
+  </g>
+
+  <!-- AZ Switch -->
+  <g transform="translate(310, 530)" filter="url(#shadow)">
+    <rect width="130" height="40" rx="5" fill="#1a2744" stroke="#0052FF" stroke-width="1.2"/>
+    <text x="65" y="17" text-anchor="middle" class="device-label" font-size="10">AZ Switch</text>
+    <text x="65" y="30" text-anchor="middle" class="ip-label">Arbeitszimmer</text>
+  </g>
+
+  <!-- CRS305 Backbone -->
+  <g transform="translate(580, 525)" filter="url(#shadow)">
+    <rect width="80" height="30" rx="5" fill="#2d1b4e" stroke="#e879f9" stroke-width="1.2"/>
+    <text x="40" y="13" text-anchor="middle" class="device-label" font-size="9">CRS305</text>
+    <text x="40" y="24" text-anchor="middle" class="ip-label">Backbone</text>
+  </g>
+
+  <!-- Keller Switch -->
+  <g transform="translate(740, 530)" filter="url(#shadow)">
+    <rect width="120" height="40" rx="5" fill="#1a2744" stroke="#0052FF" stroke-width="1.2"/>
+    <text x="60" y="17" text-anchor="middle" class="device-label" font-size="10">Keller Switch</text>
+    <text x="60" y="30" text-anchor="middle" class="ip-label">Keller</text>
+  </g>
+
+  <!-- CK+ Cloud Key -->
+  <g transform="translate(140, 600)" filter="url(#shadow)">
+    <rect width="120" height="40" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1.2"/>
+    <text x="60" y="16" text-anchor="middle" class="device-label" font-size="10">CK+ Cloud Key</text>
+    <text x="60" y="28" text-anchor="middle" class="ip-label">10.10.10.10</text>
+    <text x="60" y="37" text-anchor="middle" font-size="7" fill="#0052FF" opacity="0.7">UniFi Controller</text>
+  </g>
+
+  <!-- U6+ AP Arbeitszimmer -->
+  <g transform="translate(130, 700)" filter="url(#shadow)">
+    <rect width="130" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1.2"/>
+    <!-- WiFi icon -->
+    <path d="M65,8 Q55,8 50,14" fill="none" stroke="#0052FF" stroke-width="1" opacity="0.5"/>
+    <path d="M65,8 Q75,8 80,14" fill="none" stroke="#0052FF" stroke-width="1" opacity="0.5"/>
+    <circle cx="65" cy="10" r="1.5" fill="#0052FF" opacity="0.7"/>
+    <text x="65" y="24" text-anchor="middle" class="device-label" font-size="10">U6+ AP</text>
+    <text x="65" y="34" text-anchor="middle" class="ip-label">10.10.10.11 - Arbeitszimmer</text>
+  </g>
+
+  <!-- U6+ AP Keller -->
+  <g transform="translate(890, 665)" filter="url(#shadow)">
+    <rect width="120" height="42" rx="5" fill="#16213e" stroke="#0052FF" stroke-width="1.2"/>
+    <path d="M60,8 Q50,8 45,14" fill="none" stroke="#0052FF" stroke-width="1" opacity="0.5"/>
+    <path d="M60,8 Q70,8 75,14" fill="none" stroke="#0052FF" stroke-width="1" opacity="0.5"/>
+    <circle cx="60" cy="10" r="1.5" fill="#0052FF" opacity="0.7"/>
+    <text x="60" y="24" text-anchor="middle" class="device-label" font-size="10">U6+ AP</text>
+    <text x="60" y="34" text-anchor="middle" class="ip-label">10.10.10.12 - Keller</text>
+  </g>
+
+  <!-- ESXi7 -->
+  <g transform="translate(900, 595)" filter="url(#shadow)">
+    <rect width="110" height="38" rx="5" fill="#1a2744" stroke="#60a5fa" stroke-width="1.2"/>
+    <text x="55" y="16" text-anchor="middle" class="device-label" font-size="10">ESXi7</text>
+    <text x="55" y="28" text-anchor="middle" class="ip-label">VMware Host</text>
+  </g>
+
+  <!-- NUC-HA -->
+  <g transform="translate(510, 650)" filter="url(#shadow)">
+    <rect width="200" height="80" rx="7" fill="#1a1a2e" stroke="#e879f9" stroke-width="2"/>
+    <rect width="200" height="80" rx="7" fill="url(#nucGrad)" opacity="0.15"/>
+    <text x="100" y="17" text-anchor="middle" class="device-label" font-size="12">NUC-HA</text>
+    <text x="100" y="30" text-anchor="middle" font-size="8" fill="#4ade80">WiFi: 192.168.178.108 (VLAN 666)</text>
+    <text x="100" y="42" text-anchor="middle" font-size="8" fill="#0052FF">eth0: 10.10.10.100 (VLAN 12)</text>
+    <text x="100" y="54" text-anchor="middle" font-size="8" fill="#f97316">eth0: 10.10.0.100 (VLAN 11)</text>
+    <text x="100" y="66" text-anchor="middle" font-size="8" fill="#c084fc">eth0: 10.10.13.1 (VLAN 13)</text>
+    <text x="100" y="77" text-anchor="middle" font-size="7" fill="#a0a0a0">Home Assistant</text>
+  </g>
+
+  <!-- Gradient for NUC -->
+  <defs>
+    <linearGradient id="nucGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0052FF"/>
+      <stop offset="50%" stop-color="#e879f9"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============================================ -->
+  <!-- LEGEND                                      -->
+  <!-- ============================================ -->
+  <g transform="translate(30, 55)">
+    <rect width="155" height="105" rx="6" fill="#1a1a2e" stroke="#333355" stroke-width="1"/>
+    <text x="78" y="16" text-anchor="middle" font-size="9" fill="#e0e0e0" font-weight="600">VLAN Legend</text>
+    <line x1="10" y1="22" x2="145" y2="22" stroke="#333355" stroke-width="0.5"/>
+
+    <rect x="10" y="30" width="10" height="10" rx="2" fill="#4ade80"/>
+    <text x="26" y="39" class="legend-text">VLAN 666 - 192.168.178.0/24 (Internet)</text>
+
+    <rect x="10" y="47" width="10" height="10" rx="2" fill="#0052FF"/>
+    <text x="26" y="56" class="legend-text">VLAN 12 - 10.10.10.0/24 (IoT/UniFi)</text>
+
+    <rect x="10" y="64" width="10" height="10" rx="2" fill="#f97316"/>
+    <text x="26" y="73" class="legend-text">VLAN 11 - 10.10.0.0/24 (Sophos)</text>
+
+    <rect x="10" y="81" width="10" height="10" rx="2" fill="#c084fc"/>
+    <text x="26" y="90" class="legend-text">VLAN 13 - 10.10.13.0/24 (Tor)</text>
+  </g>
+
+  <!-- Connection type legend -->
+  <g transform="translate(1010, 55)">
+    <rect width="155" height="70" rx="6" fill="#1a1a2e" stroke="#333355" stroke-width="1"/>
+    <text x="78" y="16" text-anchor="middle" font-size="9" fill="#e0e0e0" font-weight="600">Connection Types</text>
+    <line x1="10" y1="22" x2="145" y2="22" stroke="#333355" stroke-width="0.5"/>
+
+    <line x1="10" y1="35" x2="35" y2="35" stroke="#e879f9" stroke-width="3"/>
+    <text x="42" y="38" class="legend-text">SFP+ 10G Backbone</text>
+
+    <line x1="10" y1="50" x2="35" y2="50" stroke="#888888" stroke-width="1.5"/>
+    <text x="42" y="53" class="legend-text">Ethernet</text>
+
+    <line x1="10" y1="62" x2="35" y2="62" stroke="#888888" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="42" y="65" class="legend-text">WiFi / Indirect</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="790" text-anchor="middle" font-size="8" fill="#555577">IceWiFi Project - Network Topology Diagram</text>
+</svg>

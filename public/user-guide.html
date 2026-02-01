@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - IceWiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>IceWiFi </h1>
+        <nav>
+            <a href="index.html">Start</a>
+            <a href="admin-guide.html">Admin Guide</a>
+            <a href="user-guide.html">User Guide</a>
+            <a href="network-topology.html">Topologie</a>
+            <a href="backup-restore.html">Backup</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+    </div>
+</header>
+<main>
+
+<h2>User Guide</h2>
+
+<section class="card">
+    <h3>Verfuegbare WLANs</h3>
+
+    <div class="ssid-card">
+        <h4>Bad:INet</h4>
+        <p class="ssid-purpose">Normaler Internet-Zugang</p>
+        <p>Standard-WLAN fuer alle Geraete mit Internet-Zugang. Laeuft ueber den UniFi Controller und USG.</p>
+
+    </div>
+
+    <div class="ssid-card">
+        <h4>Bad!IoT</h4>
+        <p class="ssid-purpose">IoT-Geraete (Tasmota, Sensoren)</p>
+        <p>Fuer Smart-Home-Geraete. Gleicher IP-Bereich wie Bad:INet, aber logisch getrennt.</p>
+
+    </div>
+
+    <div class="ssid-card">
+        <h4>Bad!Bad</h4>
+        <p class="ssid-purpose">Anonymer Tor-Zugang</p>
+        <p>Aller Traffic wird automatisch ueber das Tor-Netzwerk geroutet.
+        Ideal fuer anonymes Surfen. Kein Zugriff auf lokale Netzwerk-Ressourcen.</p>
+
+    </div>
+
+    <div class="ssid-card">
+        <h4>Bad!Net</h4>
+        <p class="ssid-purpose">Fritz!Box WiFi (direkt)</p>
+        <p>Direktes Fritz!Box-WLAN ohne UniFi. Fuer Fallback-Zugang wenn UniFi nicht verfuegbar.</p>
+    </div>
+</section>
+
+<section class="card">
+    <h3>Verbindungsanleitung</h3>
+    <ol>
+        <li>WLAN-Einstellungen auf dem Geraet oeffnen</li>
+        <li>Gewuenschtes Netzwerk auswaehlen (Bad:INet fuer normalen Zugang)</li>
+        <li>Passwort eingeben</li>
+        <li>Verbindung wird automatisch hergestellt</li>
+    </ol>
+
+    <h4>Tor-WLAN (Bad!Bad) Hinweise</h4>
+    <ul>
+        <li>Geschwindigkeit ist deutlich langsamer (Tor-typisch)</li>
+        <li>Manche Websites blockieren Tor-Exit-Nodes</li>
+        <li>DNS-Anfragen werden ebenfalls ueber Tor geleitet</li>
+        <li>Kein Zugriff auf lokale Geraete (Drucker, NAS, etc.)</li>
+    </ul>
+</section>
+
+</main>
+<footer>
+    <p>IceWiFi Netzwerk-Dokumentation | Generiert: 2026-02-01 08:58:30</p>
+    <p><a href="https://github.com/icepaule/IceWiFi">GitHub</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Private documentation (NEVER commit)
+private/
+*.pyc
+__pycache__/
+/tmp/
+*.log
+
+# Sensitive config (contains passwords)
+icewifi-config.json
+
+# Screenshots (generated)
+public/screenshots/
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

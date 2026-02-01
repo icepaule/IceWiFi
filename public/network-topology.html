@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netzwerk-Topologie - IceWiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>IceWiFi </h1>
+        <nav>
+            <a href="index.html">Start</a>
+            <a href="admin-guide.html">Admin Guide</a>
+            <a href="user-guide.html">User Guide</a>
+            <a href="network-topology.html">Topologie</a>
+            <a href="backup-restore.html">Backup</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+    </div>
+</header>
+<main>
+
+<h2>Netzwerk-Topologie</h2>
+
+<section class="card">
+    <h3>Physische Topologie</h3>
+    <div class="diagram-container">
+        <img src="diagrams/topology.svg" alt="Netzwerk-Topologie" class="diagram">
+    </div>
+</section>
+
+<section class="card">
+    <h3>VLAN-Map</h3>
+    <div class="diagram-container">
+        <img src="diagrams/vlan-map.svg" alt="VLAN Map" class="diagram">
+    </div>
+</section>
+
+<section class="card">
+    <h3>Physische Verbindungen (Text)</h3>
+    <pre><code>Internet
+  └── Fritz!Box (192.168.x.1)
+        ├── USG 3P (WAN: 192.168.x.250)
+        │     └── LAN: 10.10.10.1/24
+        │           ├── SW Arbeitszimmer
+        │           │     ├── Port 19: CK+ (10.10.10.10)
+        │           │     ├── Port 20: USG WAN
+        │           │     ├── Port 21: USG LAN
+        │           │     ├── Port 22: U6+ AZ (10.10.10.11)
+        │           │     ├── Port 24: NUC-HA
+        │           │     └── Port 25-26: SFP+ → Backbone
+        │           │
+        │           └── CRS305 Backbone (SFP+)
+        │                 └── SW Keller
+        │                       ├── Port 1-5: ESXi7
+        │                       ├── Port 8: KI01
+        │                       ├── Port 23: U6+ Keller (10.10.10.12)
+        │                       ├── Port 24: Fritz!Box
+        │                       └── Port 25: SFP+ → 1.OG
+        │
+        ├── Sophos XG (192.168.x.154)
+        │     ├── eth0: 10.10.0.2 (VLAN 11)
+        │     └── eth2: 10.10.10.2 (VLAN 12)
+        │
+        └── NUC-HA (192.168.x.108 WiFi)
+              ├── eno1.11: 10.10.0.100 (Sophos)
+              ├── eno1.12: 10.10.10.100 (IoT/UniFi)
+              └── eno1.13: 10.10.13.1 (Tor Gateway)</code></pre>
+</section>
+
+<section class="card">
+    <h3>Routing (NUC)</h3>
+    <pre><code>default via 192.168.x.1 dev wlp0s20f3  (WiFi → Internet)
+10.10.0.0/24  dev eno1.11  src 10.10.0.100   (VLAN 11 → Sophos)
+10.10.10.0/24 dev eno1.12  src 10.10.10.100  (VLAN 12 → IoT/UniFi)
+10.10.13.0/24 dev eno1.13  src 10.10.13.1    (VLAN 13 → Tor)
+172.30.32.0/23 dev hassio  src 172.30.32.1   (Home Assistant)</code></pre>
+</section>
+
+</main>
+<footer>
+    <p>IceWiFi Netzwerk-Dokumentation | Generiert: 2026-02-01 08:58:30</p>
+    <p><a href="https://github.com/icepaule/IceWiFi">GitHub</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup & Restore - IceWiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>IceWiFi </h1>
+        <nav>
+            <a href="index.html">Start</a>
+            <a href="admin-guide.html">Admin Guide</a>
+            <a href="user-guide.html">User Guide</a>
+            <a href="network-topology.html">Topologie</a>
+            <a href="backup-restore.html">Backup</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+    </div>
+</header>
+<main>
+
+<h2>Backup &amp; Restore</h2>
+
+<section class="card">
+    <h3>Backup-Uebersicht</h3>
+    <table>
+        <tr><th>Was</th><th>Wie</th><th>Wann</th><th>Aufbewahrung</th></tr>
+        <tr><td>Home Assistant</td><td>HA Backup (automatisch)</td><td>Taeglich 05:00</td><td>3 Kopien</td></tr>
+        <tr><td>UniFi Controller</td><td><code>backup-unifi.sh</code></td><td>Taeglich 03:00</td><td>7 Backups</td></tr>
+        <tr><td>Netzwerk-Config</td><td><code>backup-network-config.sh</code></td><td>Taeglich 03:00</td><td>30 Backups</td></tr>
+        <tr><td>Switch-Configs</td><td><code>switch_backup/</code></td><td>Manuell</td><td>Unbegrenzt</td></tr>
+    </table>
+</section>
+
+<section class="card">
+    <h3>UniFi Backup</h3>
+    <pre><code># Manuelles Backup
+/usr/local/bin/backup-unifi.sh
+
+# Backup-Verzeichnis
+ls -la /var/backups/icewifi/unifi/
+
+# Restore: Backup-Datei im CK+ Controller importieren
+# via https://10.10.10.10 → Settings → Backup</code></pre>
+</section>
+
+<section class="card">
+    <h3>Netzwerk-Config Backup</h3>
+    <pre><code># Manuelles Backup
+/usr/local/bin/backup-network-config.sh
+
+# Inhalt: iptables, NetworkManager, dnsmasq, tor, systemd units
+ls -la /var/backups/icewifi/config/</code></pre>
+</section>
+
+<section class="card">
+    <h3>Home Assistant Restore</h3>
+    <pre><code># Backups auflisten
+ha backups list
+
+# Restore (Container wird neu gestartet)
+ha backups restore &lt;slug&gt; --homeassistant</code></pre>
+
+</section>
+
+<section class="card">
+    <h3>Disaster Recovery</h3>
+    <ol>
+        <li>NUC mit Debian 13 neu installieren</li>
+        <li>Home Assistant Supervised installieren</li>
+        <li>HA Backup wiederherstellen (Encryption Key benoetigt)</li>
+        <li>VLAN-Interfaces einrichten (eno1.11, eno1.12, eno1.13)</li>
+        <li>Systemd Services deployen (socat, dnsmasq, iptables)</li>
+        <li>IceWiFi Dokumentation von GitHub klonen</li>
+    </ol>
+</section>
+
+</main>
+<footer>
+    <p>IceWiFi Netzwerk-Dokumentation | Generiert: 2026-02-01 08:58:30</p>
+    <p><a href="https://github.com/icepaule/IceWiFi">GitHub</a></p>
+</footer>
+</body>
+</html>

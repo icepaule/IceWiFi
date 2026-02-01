@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start - IceWiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>IceWiFi </h1>
+        <nav>
+            <a href="index.html">Start</a>
+            <a href="admin-guide.html">Admin Guide</a>
+            <a href="user-guide.html">User Guide</a>
+            <a href="network-topology.html">Topologie</a>
+            <a href="backup-restore.html">Backup</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+    </div>
+</header>
+<main>
+
+<section class="hero">
+    <h2>Netzwerk-Dokumentation</h2>
+    <p>Komplette Dokumentation des Heimnetzwerks mit UniFi, Sophos, Fritz!Box und Home Assistant.</p>
+</section>
+
+<section class="cards">
+    <div class="card">
+        <h3>VLANs</h3>
+        <table>
+            <tr><th>VLAN</th><th>Subnet</th><th>Zweck</th></tr>
+            <tr><td><span class="vlan-badge" style="background:#ff6b35">11</span></td><td><code>10.10.0.0/24</code></td><td>Sophos Internal</td></tr>
+            <tr><td><span class="vlan-badge" style="background:#0052ff">12</span></td><td><code>10.10.10.0/24</code></td><td>IoT / UniFi</td></tr>
+            <tr><td><span class="vlan-badge" style="background:#9b59b6">13</span></td><td><code>10.10.13.0/24</code></td><td>Tor (Bad!Bad)</td></tr>
+            <tr><td><span class="vlan-badge" style="background:#2ecc71">666</span></td><td><code>192.168.178.0/24</code></td><td>Internet / Fritz!Box</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>SSIDs</h3>
+        <table>
+            <tr><th>SSID</th><th>VLAN</th><th>Zweck</th></tr>
+            <tr><td><code>Bad:INet</code></td><td>default</td><td>Internet-Zugang</td></tr>
+            <tr><td><code>Bad!IoT</code></td><td>default</td><td>IoT Geraete</td></tr>
+            <tr><td><code>Bad!Bad</code></td><td>13</td><td>Tor Anonymous</td></tr>
+            <tr><td><code>Bad!Net</code></td><td>666</td><td>Fritz!Box WiFi</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>Geraete</h3>
+        <table>
+            <tr><th>Geraet</th><th>IP</th><th>Rolle</th></tr>
+            <tr><td>Fritz!Box</td><td><code>192.168.x.1</code></td><td>Internet Gateway</td></tr>
+            <tr><td>USG 3P</td><td><code>192.168.x.250</code></td><td>UniFi Security Gateway</td></tr>
+            <tr><td>Cloud Key Plus</td><td><code>10.10.10.10</code></td><td>UniFi Controller</td></tr>
+            <tr><td>U6+ Arbeitszimmer (1.OG)</td><td><code>10.10.10.11</code></td><td>ap</td></tr>
+            <tr><td>U6+ Keller</td><td><code>10.10.10.12</code></td><td>ap</td></tr>
+            <tr><td>Switch Arbeitszimmer</td><td><code>192.168.y.8</code></td><td>switch</td></tr>
+            <tr><td>Switch Keller</td><td><code>192.168.x.165</code></td><td>switch</td></tr>
+            <tr><td>CRS305 Backbone</td><td><code>192.168.x.191</code></td><td>switch</td></tr>
+            <tr><td>Sophos XG Firewall</td><td><code>192.168.x.154</code></td><td>Firewall</td></tr>
+            <tr><td>NUC-HA</td><td><code>192.168.x.108</code></td><td>Home Assistant Host</td></tr>
+            <tr><td>ESXi7</td><td><code>192.168.x.174</code></td><td>VMware ESXi</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>Services</h3>
+        <table>
+            <tr><th>Service</th><th>Status</th><th>Beschreibung</th></tr>
+            <tr><td><code>socat-unifi</code></td><td><span class="badge badge-ok">persistent</span></td><td>CK+ TCP Proxy 8443 -> CK+ 443</td></tr>
+            <tr><td><code>dnsmasq-tor</code></td><td><span class="badge badge-ok">persistent</span></td><td>DHCP Server VLAN 13 (Bad!Bad)</td></tr>
+            <tr><td><code>iptables-tor</code></td><td><span class="badge badge-ok">persistent</span></td><td>Tor NAT Redirect Regeln (VLAN 13)</td></tr>
+            <tr><td><code>tor</code></td><td><span class="badge badge-ok">persistent</span></td><td>Tor Transparent Proxy</td></tr>
+        </table>
+    </div>
+</section>
+
+</main>
+<footer>
+    <p>IceWiFi Netzwerk-Dokumentation | Generiert: 2026-02-01 08:58:30</p>
+    <p><a href="https://github.com/icepaule/IceWiFi">GitHub</a></p>
+</footer>
+</body>
+</html>

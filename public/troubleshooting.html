@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - IceWiFi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <h1>IceWiFi </h1>
+        <nav>
+            <a href="index.html">Start</a>
+            <a href="admin-guide.html">Admin Guide</a>
+            <a href="user-guide.html">User Guide</a>
+            <a href="network-topology.html">Topologie</a>
+            <a href="backup-restore.html">Backup</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </nav>
+    </div>
+</header>
+<main>
+
+<h2>Troubleshooting</h2>
+
+<section class="card">
+    <h3>Service-Status pruefen</h3>
+    <pre><code># Alle IceWiFi Services
+systemctl status socat-unifi dnsmasq-tor iptables-tor tor@default
+
+# VLAN Interfaces
+ip addr show eno1.11 eno1.12 eno1.13
+
+# Routing
+ip route show
+
+# iptables Tor-Regeln
+iptables -t nat -L PREROUTING -n -v | grep eno1.13</code></pre>
+</section>
+
+<section class="card">
+    <h3>UniFi Controller nicht erreichbar</h3>
+    <ol>
+        <li>Socat-Proxy pruefen: <code>systemctl status socat-unifi</code></li>
+        <li>VLAN 12 Interface: <code>ip addr show eno1.12</code></li>
+        <li>CK+ erreichbar: <code>ping -c 3 10.10.10.10</code></li>
+        <li>CK+ HTTPS: <code>curl -sk https://10.10.10.10/status</code></li>
+        <li>Socat neustarten: <code>systemctl restart socat-unifi</code></li>
+    </ol>
+</section>
+
+<section class="card">
+    <h3>Tor-WLAN (Bad!Bad) funktioniert nicht</h3>
+    <ol>
+        <li>DHCP pruefen: <code>systemctl status dnsmasq-tor</code></li>
+        <li>Tor-Daemon: <code>systemctl status tor@default</code></li>
+        <li>iptables-Regeln: <code>systemctl status iptables-tor</code></li>
+        <li>VLAN 13 Interface: <code>ip addr show eno1.13</code></li>
+        <li>Tor Bootstrap: <code>journalctl -u tor@default | grep Bootstrap</code></li>
+        <li>Alles neustarten:
+            <pre><code>systemctl restart iptables-tor dnsmasq-tor tor@default</code></pre>
+        </li>
+    </ol>
+</section>
+
+<section class="card">
+    <h3>VLAN-Interface kommt nicht hoch</h3>
+    <pre><code># NetworkManager Verbindungen pruefen
+nmcli con show
+
+# Autoconnect pruefen
+nmcli con show "eno1.11" | grep autoconnect
+nmcli con show "eno1.12" | grep autoconnect
+
+# Manuell aktivieren
+nmcli con up "eno1.11"
+nmcli con up "eno1.12"
+
+# Basis-Interface pruefen
+ip link show eno1</code></pre>
+</section>
+
+<section class="card">
+    <h3>CK+ SSH-Zugang</h3>
+    <p>Der CK+ akzeptiert nur keyboard-interactive Auth. Normaler SSH funktioniert nicht.</p>
+    <pre><code># Expect-basierter SSH-Zugang
+expect -c '
+  spawn ssh root@10.10.10.10
+  expect "Password:"
+  send "PASSWORT\r"
+  interact
+'</code></pre>
+</section>
+
+<section class="card">
+    <h3>Home Assistant neustarten</h3>
+    <pre><code># HA Core neustarten (schnell)
+ha core restart
+
+# HA Supervisor neustarten
+ha supervisor restart
+
+# Kompletter Docker-Neustart (langsam)
+systemctl restart hassio-supervisor
+
+# Konfiguration validieren
+ha core check</code></pre>
+</section>
+
+<section class="card">
+    <h3>Screenshots neu generieren</h3>
+    <pre><code># Manuell
+python3 /root/scripts/icewifi-screenshots.py
+
+# Via systemd
+systemctl start icewifi-screenshots
+
+# Timer-Status
+systemctl list-timers icewifi-screenshots.timer</code></pre>
+</section>
+
+<section class="card">
+    <h3>Dokumentation neu generieren</h3>
+    <pre><code># Nur generieren
+cd /root/IceWiFi && python3 generate.py
+
+# Generieren + Deployen
+cd /root/IceWiFi && python3 generate.py --deploy
+
+# Nur private Doku
+cd /root/IceWiFi && python3 generate.py --private
+
+# Mit frischen Screenshots
+cd /root/IceWiFi && python3 generate.py --deploy --screenshots</code></pre>
+</section>
+
+</main>
+<footer>
+    <p>IceWiFi Netzwerk-Dokumentation | Generiert: 2026-02-01 08:58:30</p>
+    <p><a href="https://github.com/icepaule/IceWiFi">GitHub</a></p>
+</footer>
+</body>
+</html>
