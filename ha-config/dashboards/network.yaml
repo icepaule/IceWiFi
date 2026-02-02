@@ -1,0 +1,151 @@
+# =============================================================================
+# IceWiFi - Network Monitoring Dashboard
+# =============================================================================
+# Home Assistant YAML dashboard for monitoring UniFi network infrastructure
+# Uses mushroom-template-card for consistent styling
+#
+# Prerequisites:
+# - packages/unifi.yaml (sensor definitions)
+# - HACS: mushroom cards
+# - Optional: card-mod for custom styling
+# =============================================================================
+
+title: Network Monitor
+views:
+  # =========================================================================
+  # Overview
+  # =========================================================================
+  - title: Overview
+    path: overview
+    icon: mdi:network
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            title: "Network Status"
+            icon: mdi:lan
+            entities:
+              - entity: sensor.netzwerk_status
+                name: Overall Status
+              - entity: binary_sensor.unifi_controller_online
+                name: UniFi Controller
+              - entity: sensor.unifi_gateway_status
+                name: USG Gateway
+              - entity: sensor.unifi_aps_online
+                name: APs Online
+              - entity: sensor.unifi_clients_total
+                name: WiFi Clients
+
+  # =========================================================================
+  # UniFi Monitor
+  # =========================================================================
+  - title: UniFi Monitor
+    path: unifi
+    icon: mdi:wifi-cog
+    type: sections
+    max_columns: 3
+    sections:
+      # --- Overall Status ---
+      - type: grid
+        cards:
+          - type: entities
+            title: "UniFi Status"
+            icon: mdi:check-network
+            entities:
+              - entity: sensor.netzwerk_status
+                name: Overall Status
+              - entity: binary_sensor.unifi_controller_online
+                name: Controller
+              - entity: sensor.unifi_gateway_status
+                name: Gateway
+              - entity: sensor.unifi_aps_online
+                name: Access Points Online
+              - entity: sensor.unifi_clients_total
+                name: Total Clients
+
+          - type: entities
+            title: "Clients per SSID"
+            icon: mdi:wifi
+            entities:
+              - entity: sensor.wifi_clients_inet
+                name: "Internet SSID"
+                icon: mdi:web
+              - entity: sensor.wifi_clients_iot
+                name: "IoT SSID"
+                icon: mdi:devices
+              - entity: sensor.wifi_clients_tor
+                name: "Tor SSID"
+                icon: mdi:incognito
+
+      # --- AP Details ---
+      - type: grid
+        title: Access Points
+        cards:
+          - type: markdown
+            title: "AP Status"
+            content: |
+              {% set aps = state_attr('sensor.unifi_ap_details', 'aps') %}
+              {% if aps and aps | length > 0 %}
+              | AP | Status | Clients | Load | Quality |
+              |----|--------|--------:|-----:|--------:|
+              {% for ap in aps -%}
+              | **{{ ap.name }}** ({{ ap.ip }}) | {{ 'Online' if ap.state == 1 else 'Offline' }} | {{ ap.clients }} | {{ ap.load_1 }} | {{ ap.satisfaction }}% |
+              {% endfor %}
+              {% else %}
+              *No AP data available (controller offline?)*
+              {% endif %}
+
+          - type: markdown
+            title: "Gateway"
+            content: |
+              {% set gw = state_attr('sensor.unifi_ap_details', 'gateway') %}
+              {% if gw %}
+              | Property | Value |
+              |----------|-------|
+              | **Status** | {{ 'Online' if gw.state == 1 else 'Offline' }} |
+              | **WAN IP** | {{ gw.wan_ip }} |
+              | **Download** | {{ states('sensor.usg_wan_download') }} Mbit/s |
+              | **Upload** | {{ states('sensor.usg_wan_upload') }} Mbit/s |
+              | **Load** | {{ gw.load_1 }} |
+              | **RAM** | {{ gw.mem_pct }}% |
+              | **Uptime** | {{ (gw.uptime_s // 86400) }}d {{ (gw.uptime_s % 86400 // 3600) }}h |
+              {% else %}
+              *No gateway data available*
+              {% endif %}
+
+      # --- WiFi Quality ---
+      - type: grid
+        title: WiFi Quality
+        cards:
+          - type: gauge
+            entity: sensor.wifi_quality_ap1
+            name: "WiFi Quality AP1"
+            min: 0
+            max: 100
+            severity:
+              green: 80
+              yellow: 50
+              red: 0
+            needle: true
+
+          - type: gauge
+            entity: sensor.wifi_quality_ap2
+            name: "WiFi Quality AP2"
+            min: 0
+            max: 100
+            severity:
+              green: 80
+              yellow: 50
+              red: 0
+            needle: true
+
+          - type: markdown
+            title: "SSID Overview"
+            content: |
+              | SSID | VLAN | Purpose | Clients |
+              |------|------|---------|--------:|
+              | **Internet** | Default | Internet access | {{ states('sensor.wifi_clients_inet') }} |
+              | **IoT** | Default | Smart Home | {{ states('sensor.wifi_clients_iot') }} |
+              | **Tor** | 13 | Anonymous | {{ states('sensor.wifi_clients_tor') }} |

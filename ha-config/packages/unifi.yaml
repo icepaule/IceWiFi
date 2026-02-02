@@ -1,0 +1,281 @@
+# =============================================================================
+# IceWiFi - UniFi Network Monitoring Package
+# =============================================================================
+# Sensors for UniFi Controller via Cloud Key Plus
+# Access via socat proxy: 127.0.0.1:8443 -> <CK_IP>:443
+#
+# Features:
+# - Per-SSID client counters
+# - AP detail sensors (load, uptime, clients per AP)
+# - Gateway throughput monitoring
+# - Network health status
+#
+# IMPORTANT: Replace placeholder credentials and IPs with your own values
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Command Line Sensors - UniFi API Queries
+# -----------------------------------------------------------------------------
+command_line:
+  # Total active WiFi clients
+  - sensor:
+      name: "UniFi Clients Total"
+      unique_id: unifi_clients_total
+      command: >-
+        curl -sk -b /tmp/unifi_cookie -c /tmp/unifi_cookie
+        -X POST https://127.0.0.1:8443/api/login
+        -H 'Content-Type: application/json'
+        -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}' > /dev/null 2>&1 &&
+        curl -sk -b /tmp/unifi_cookie
+        https://127.0.0.1:8443/api/s/default/stat/sta 2>/dev/null |
+        python3 -c "import sys,json;d=json.load(sys.stdin);print(len(d.get('data',[])))" 2>/dev/null || echo 0
+      unit_of_measurement: "Clients"
+      scan_interval: 300
+      icon: mdi:wifi
+
+  # AP Status Check
+  - sensor:
+      name: "UniFi APs Online"
+      unique_id: unifi_aps_online
+      command: >-
+        curl -sk -b /tmp/unifi_cookie -c /tmp/unifi_cookie
+        -X POST https://127.0.0.1:8443/api/login
+        -H 'Content-Type: application/json'
+        -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}' > /dev/null 2>&1 &&
+        curl -sk -b /tmp/unifi_cookie
+        https://127.0.0.1:8443/api/s/default/stat/device 2>/dev/null |
+        python3 -c "import sys,json;d=json.load(sys.stdin);aps=[x for x in d.get('data',[]) if x.get('type')=='uap'];print(sum(1 for a in aps if a.get('state',0)==1))" 2>/dev/null || echo 0
+      unit_of_measurement: "APs"
+      scan_interval: 300
+      icon: mdi:access-point
+
+  # USG Gateway Status
+  - sensor:
+      name: "UniFi Gateway Status"
+      unique_id: unifi_gateway_status
+      command: >-
+        curl -sk -b /tmp/unifi_cookie -c /tmp/unifi_cookie
+        -X POST https://127.0.0.1:8443/api/login
+        -H 'Content-Type: application/json'
+        -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}' > /dev/null 2>&1 &&
+        curl -sk -b /tmp/unifi_cookie
+        https://127.0.0.1:8443/api/s/default/stat/device 2>/dev/null |
+        python3 -c "import sys,json;d=json.load(sys.stdin);gw=[x for x in d.get('data',[]) if x.get('type')=='ugw'];print('online' if gw and gw[0].get('state',0)==1 else 'offline')" 2>/dev/null || echo "unknown"
+      scan_interval: 300
+      icon: mdi:router-network
+
+  # Controller Reachability
+  - binary_sensor:
+      name: "UniFi Controller Online"
+      unique_id: unifi_controller_online
+      command: "curl -sk -o /dev/null -w '%{http_code}' https://127.0.0.1:8443/status 2>/dev/null"
+      payload_on: "200"
+      device_class: connectivity
+      scan_interval: 120
+
+  # Per-SSID Client Counter (combined sensor with JSON attributes)
+  - sensor:
+      name: "UniFi SSID Details"
+      unique_id: unifi_ssid_details
+      command: >-
+        curl -sk -b /tmp/unifi_cookie -c /tmp/unifi_cookie
+        -X POST https://127.0.0.1:8443/api/login
+        -H 'Content-Type: application/json'
+        -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}' > /dev/null 2>&1 &&
+        curl -sk -b /tmp/unifi_cookie
+        https://127.0.0.1:8443/api/s/default/stat/sta 2>/dev/null |
+        python3 -c "
+        import sys,json
+        try:
+            d=json.load(sys.stdin).get('data',[])
+            ssids={}
+            for c in d:
+                s=c.get('essid','unknown')
+                if s not in ssids: ssids[s]={'count':0,'rx':0,'tx':0}
+                ssids[s]['count']+=1
+                ssids[s]['rx']+=c.get('rx_bytes',0)
+                ssids[s]['tx']+=c.get('tx_bytes',0)
+            # Replace with your SSID names
+            inet=ssids.get('Your-Internet-SSID',{}).get('count',0)
+            iot=ssids.get('Your-IoT-SSID',{}).get('count',0)
+            anon=ssids.get('Your-Tor-SSID',{}).get('count',0)
+            total=len(d)
+            print(json.dumps({'total':total,'inet':inet,'iot':iot,'bad':anon,'ssids':ssids}))
+        except: print(json.dumps({'total':0,'inet':0,'iot':0,'bad':0,'ssids':{}}))" 2>/dev/null || echo '{"total":0,"inet":0,"iot":0,"bad":0,"ssids":{}}'
+      value_template: "{{ value_json.total }}"
+      unit_of_measurement: "Clients"
+      json_attributes:
+        - inet
+        - iot
+        - bad
+        - ssids
+      scan_interval: 300
+      icon: mdi:wifi
+
+  # AP Detail Sensor (load, clients per AP, uptime, gateway throughput)
+  - sensor:
+      name: "UniFi AP Details"
+      unique_id: unifi_ap_details
+      command: >-
+        curl -sk -b /tmp/unifi_cookie -c /tmp/unifi_cookie
+        -X POST https://127.0.0.1:8443/api/login
+        -H 'Content-Type: application/json'
+        -d '{"username":"YOUR_USERNAME","password":"YOUR_PASSWORD"}' > /dev/null 2>&1 &&
+        curl -sk -b /tmp/unifi_cookie
+        https://127.0.0.1:8443/api/s/default/stat/device 2>/dev/null |
+        python3 -c "
+        import sys,json
+        try:
+            d=json.load(sys.stdin).get('data',[])
+            aps=[]
+            gw=None
+            for dev in d:
+                if dev.get('type')=='uap':
+                    aps.append({
+                        'name':dev.get('name','AP'),
+                        'ip':dev.get('ip',''),
+                        'state':dev.get('state',0),
+                        'clients':dev.get('num_sta',0),
+                        'load_1':round(dev.get('sys_stats',{}).get('loadavg_1',0),2),
+                        'mem_pct':round(dev.get('sys_stats',{}).get('mem_used',0)/max(dev.get('sys_stats',{}).get('mem_total',1),1)*100,1),
+                        'uptime_s':dev.get('uptime',0),
+                        'channel_2g':dev.get('radio_table_stats',[{}])[0].get('channel','?') if dev.get('radio_table_stats') else '?',
+                        'channel_5g':dev.get('radio_table_stats',[{},{}])[1].get('channel','?') if len(dev.get('radio_table_stats',[])) > 1 else '?',
+                        'satisfaction':dev.get('satisfaction',0)
+                    })
+                elif dev.get('type')=='ugw':
+                    s=dev.get('sys_stats',{})
+                    wan=dev.get('wan1',{})
+                    gw={
+                        'name':dev.get('name','USG'),
+                        'state':dev.get('state',0),
+                        'uptime_s':dev.get('uptime',0),
+                        'load_1':round(s.get('loadavg_1',0),2),
+                        'mem_pct':round(s.get('mem_used',0)/max(s.get('mem_total',1),1)*100,1),
+                        'wan_ip':wan.get('ip',''),
+                        'wan_rx_bps':wan.get('rx_bytes-r',0),
+                        'wan_tx_bps':wan.get('tx_bytes-r',0)
+                    }
+            result={'aps':aps,'gateway':gw,'ap_count':len(aps)}
+            print(json.dumps(result))
+        except: print(json.dumps({'aps':[],'gateway':None,'ap_count':0}))" 2>/dev/null || echo '{"aps":[],"gateway":null,"ap_count":0}'
+      value_template: "{{ value_json.ap_count }}"
+      unit_of_measurement: "APs"
+      json_attributes:
+        - aps
+        - gateway
+      scan_interval: 300
+      icon: mdi:access-point-network
+
+# -----------------------------------------------------------------------------
+# Template Sensors for derived values
+# -----------------------------------------------------------------------------
+template:
+  - sensor:
+      - name: "Netzwerk Status"
+        unique_id: network_overall_status
+        state: >-
+          {% set ctrl = states('binary_sensor.unifi_controller_online') %}
+          {% set gw = states('sensor.unifi_gateway_status') %}
+          {% set aps = states('sensor.unifi_aps_online') | int(0) %}
+          {% if ctrl == 'on' and gw == 'online' and aps >= 2 %}
+            Alles OK
+          {% elif ctrl == 'on' and gw == 'online' %}
+            Eingeschraenkt
+          {% elif ctrl == 'on' %}
+            Gateway Offline
+          {% else %}
+            Controller Offline
+          {% endif %}
+        icon: >-
+          {% set s = states('sensor.netzwerk_status') %}
+          {% if s == 'Alles OK' %}mdi:check-network
+          {% elif s == 'Eingeschraenkt' %}mdi:network-strength-2
+          {% else %}mdi:network-off
+          {% endif %}
+
+      - name: "UniFi APs Gesamt"
+        unique_id: unifi_aps_total
+        state: "2"
+        unit_of_measurement: "APs"
+        icon: mdi:access-point-network
+
+      # Per-SSID client counters (template from JSON attributes)
+      - name: "WiFi Clients Internet"
+        unique_id: unifi_clients_inet
+        state: "{{ state_attr('sensor.unifi_ssid_details', 'inet') | int(0) }}"
+        unit_of_measurement: "Clients"
+        icon: mdi:wifi
+
+      - name: "WiFi Clients IoT"
+        unique_id: unifi_clients_iot
+        state: "{{ state_attr('sensor.unifi_ssid_details', 'iot') | int(0) }}"
+        unit_of_measurement: "Clients"
+        icon: mdi:devices
+
+      - name: "WiFi Clients Tor"
+        unique_id: unifi_clients_tor
+        state: "{{ state_attr('sensor.unifi_ssid_details', 'bad') | int(0) }}"
+        unit_of_measurement: "Clients"
+        icon: mdi:incognito
+
+      # Gateway throughput
+      - name: "USG WAN Download"
+        unique_id: unifi_gw_wan_rx
+        state: >-
+          {% set gw = state_attr('sensor.unifi_ap_details', 'gateway') %}
+          {% if gw %}{{ ((gw.wan_rx_bps | default(0)) / 1000000) | round(2) }}{% else %}0{% endif %}
+        unit_of_measurement: "Mbit/s"
+        icon: mdi:download-network
+
+      - name: "USG WAN Upload"
+        unique_id: unifi_gw_wan_tx
+        state: >-
+          {% set gw = state_attr('sensor.unifi_ap_details', 'gateway') %}
+          {% if gw %}{{ ((gw.wan_tx_bps | default(0)) / 1000000) | round(2) }}{% else %}0{% endif %}
+        unit_of_measurement: "Mbit/s"
+        icon: mdi:upload-network
+
+      # AP Satisfaction Scores
+      - name: "WiFi Quality AP1"
+        unique_id: unifi_satisfaction_ap1
+        state: >-
+          {% set aps = state_attr('sensor.unifi_ap_details', 'aps') %}
+          {% if aps and aps | length > 0 %}{{ aps[0].satisfaction | default(0) }}{% else %}0{% endif %}
+        unit_of_measurement: "%"
+        icon: mdi:signal
+
+      - name: "WiFi Quality AP2"
+        unique_id: unifi_satisfaction_ap2
+        state: >-
+          {% set aps = state_attr('sensor.unifi_ap_details', 'aps') %}
+          {% if aps and aps | length > 1 %}{{ aps[1].satisfaction | default(0) }}{% else %}0{% endif %}
+        unit_of_measurement: "%"
+        icon: mdi:signal
+
+# -----------------------------------------------------------------------------
+# Automations
+# -----------------------------------------------------------------------------
+automation:
+  - alias: "Network Warning"
+    id: network_warning
+    trigger:
+      - platform: state
+        entity_id: sensor.netzwerk_status
+        from: "Alles OK"
+    condition:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: sensor.netzwerk_status
+            state: "unavailable"
+    action:
+      - service: persistent_notification.create
+        data:
+          title: "Network Warning"
+          message: >-
+            Network Status: {{ states('sensor.netzwerk_status') }}
+            Controller: {{ states('binary_sensor.unifi_controller_online') }}
+            Gateway: {{ states('sensor.unifi_gateway_status') }}
+            APs Online: {{ states('sensor.unifi_aps_online') }}/{{ states('sensor.unifi_aps_gesamt') }}
+          notification_id: network_warning
